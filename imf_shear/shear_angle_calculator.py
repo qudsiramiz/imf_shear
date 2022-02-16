@@ -1,28 +1,22 @@
 import calendar
 import datetime
+import time
 import multiprocessing as mp
-import os
 import warnings
+from pathlib import Path
 
-import h5py as hf
-import matplotlib.gridspec as gridspec
 import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 import numpy as np
-
 import scipy as sp
-from dateutil import parser
-from matplotlib import widgets
 from matplotlib.pyplot import MaxNLocator
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from skimage.filters import frangi, hessian, meijering, sato
 from tabulate import tabulate
 
 # Set the fontstyle to Times New Roman
 font = {'family': 'serif', 'weight': 'normal', 'size': 10}
 plt.rc('font', **font)
 plt.rc('text', usetex=True)
-
 
 def get_shear(b_vec_1, b_vec_2, angle_units="radians"):
     r"""
@@ -318,15 +312,7 @@ def model_run(*args):
             by = by_ext + by_igrf
             bz = bz_ext + bz_igrf
 
-            #if (np.sqrt(y_shu**2 + z_shu**2) > 31):
-            #    shear = np.nan
-            #    rx_en = np.nan
-            #    va_cs = np.nan
-            #    bisec_msp = np.nan
-            #    bisec_msh = np.nan
-            #else:
             shear = get_shear([bx, by, bz], [b_msx, b_msy, b_msz], angle_units="degrees")
-
             break
 
     return j, k, bx, by, bz, shear, x_shu, y_shu, z_shu, b_msx, b_msy, b_msz
@@ -343,6 +329,7 @@ def plot_shear(
     z_max=None,
     model_type=None,
     dr=None,
+    clip_image=False,
     figure_file=None,
     figure_format="png",
     dpi=300,
@@ -375,6 +362,8 @@ def plot_shear(
         The type of model.
     dr : float
         The step size of the grid. Default is none.
+    clip_image : bool
+        Whether to clip the image to the circle. Default is False.
     figure_file : str
         The file name of the figure. Default is None.
     figure_format : str
@@ -402,29 +391,34 @@ def plot_shear(
 
     image_rotated = np.transpose(shear)
     # Smoothen the image
-    image_smooth = sp.ndimage.filters.gaussian_filter(image_rotated, sigma=[5, 5], mode='nearest')
+    image_smooth = sp.ndimage.gaussian_filter(image_rotated, sigma=[5, 5], mode='nearest')
 
     fig, axs = plt.subplots(1, 1, figsize=figure_size)
     im = axs.imshow(image_smooth, extent=[y_min, y_max, z_min, z_max], origin='lower',
                     cmap=plt.cm.viridis)
     divider = make_axes_locatable(axs)
 
-    patch = patches.Circle((0, 0), radius=15, transform=axs.transData, fc='none', ec='k', lw=0.1)
-    axs.add_patch(patch)
-    #im.set_clip_path(patch)
+    patch_termination = patches.Circle((0, 0), radius=15, transform=axs.transData, fc='none',
+                                       ec='k', lw=0.5, ls='--')
+    axs.add_patch(patch_termination)
+    if clip_image:
+        patch_radius = (abs(y_min) + abs(y_max))/2
+        patch = patches.Circle((0, 0), radius=patch_radius, transform=axs.transData, fc='none',
+                               ec='k', lw=0.1)
+        axs.add_patch(patch)
+        im.set_clip_path(patch)
 
     axs.tick_params(axis="both", direction="in", top=True, labeltop=False, bottom=True,
-                    labelbottom=True, left=True, labelleft=True, right=True, labelright=False,
-                    labelsize=14)
+                    labelbottom=True, left=True, labelleft=True, right=True, labelright=False)
 
-    axs.set_xlabel(r'Y [GSM, $R_\oplus$]', fontsize=18)
-    axs.set_ylabel(r'Z [GSM, $R_\oplus$]', fontsize=18)
+    axs.set_xlabel(r'Y [GSM, $R_\oplus$]', labelpad=1)
+    axs.set_ylabel(r'Z [GSM, $R_\oplus$]', labelpad=-10)
 
     cax = divider.append_axes("top", size="5%", pad=0.01)
     cbar = plt.colorbar(im, cax=cax, orientation='horizontal', ticks=None, fraction=0.05,
                         pad=0.01)
     cbar.ax.tick_params(axis="x", direction="in", top=True, labeltop=True, bottom=True,
-                        labelbottom=False, pad=0.01, labelsize=14)
+                        labelbottom=False, pad=0.01)
     cbar.ax.xaxis.set_label_position('top')
     cbar.ax.set_xlabel(f'Shear Angle ({angle_units})', fontsize=18)
 
@@ -433,22 +427,36 @@ def plot_shear(
     clock_angle_degrees = np.round(sw_params['imf_clock_angle'], 2)
     dipole_angle_degrees = np.round(sw_params['ps'] * 180 / np.pi, 2)
 
+    box_style = dict(boxstyle="round", facecolor="black", edgecolor="black", lw=0.5, alpha=0.6)
     axs.text(1.0, 0.5, f'Time of observation: {time_observation}', horizontalalignment='left',
-             verticalalignment='center', transform=axs.transAxes, rotation=270, color='r')
+             verticalalignment='center', transform=axs.transAxes, rotation=270, color='k')
 
     axs.text(0.01, 0.99, f'Clock Angle: {clock_angle_degrees}$^\circ$',
              horizontalalignment='left', verticalalignment='top', transform=axs.transAxes,
-             rotation=0, color='r')
+             rotation=0, color='w', bbox=box_style)
 
     axs.text(0.99, 0.99, f'Dipole tilt: {dipole_angle_degrees}$^\circ$',
              horizontalalignment='right', verticalalignment='top', transform=axs.transAxes,
-             rotation=0, color='r')
+             rotation=0, color='w', bbox=box_style)
 
+    # Set the number of ticks on the x-axis
+    axs.xaxis.set_major_locator(MaxNLocator(nbins=5, prune=None))
+    axs.yaxis.set_major_locator(MaxNLocator(nbins=5, prune=None))
     if (save_figure):
-        fig.savefig(f'{figure_file}_{model_type}_{dr}dr.{figure_format}',
-                    bbox_inches='tight', pad_inches=0.05, format=figure_format, dpi=dpi)
+        fig_name = f"{figure_file}_{model_type}_{dr}dr.{figure_format}"
+        # Check if the file exists
+        if Path(fig_name).is_file():
+            print(f"A file by the name '{fig_name}' already exists. \n")
+            overwrite = overwrite_stuff()
+            if (overwrite=='y'):
+                print(f"Over writing the figure '{fig_name}'")
+                fig_name = fig_name
+            else:
+                fig_name = f"{figure_file}_{model_type}_{dr}dr_{time.time():.0f}.{figure_format}"
+
+        fig.savefig(fig_name, bbox_inches='tight', pad_inches=0.05, format=figure_format, dpi=dpi)
+        print(f"Figure saved as '{fig_name}'")
     plt.close()
-    print(f"Figure saved to {figure_file}_{data_file}_{model_type}_{dr}dr.png")
 
 
 def shear_angle_calculator(
@@ -470,8 +478,10 @@ def shear_angle_calculator(
     save_data=False,
     data_file="shear_data",
     plot_figure=False,
+    clip_image=False,
     save_figure=False,
     figure_file="shear_angle_calculator",
+    figure_size=(8, 8),
     figure_format="png",
     verbose=True,
 ):
@@ -535,10 +545,14 @@ def shear_angle_calculator(
         Name of the hdf5 file to which data is to be saved. Default is "shear_data".
     plot_figure : bool
         If set to True, then the figure will be plotted and shown. Default is False.
+    clip_image : bool
+        If set to True, then the image will be clipped to the region of interest. Default is False.
     save_figure : bool
         If set to True, then the figure will be saved. Default is False.
     figure_file : str
         Name of the figure file. Default is "shear_angle_calculator".
+    figure_size : tuple of int
+        Size of the figure in inches. Default is (8, 8).
     figure_format : str
         Format of the figure file. Default is "png". Other option can be "pdf".
     verbose : bool If set to True, then the code will print out the progress of the code at several
@@ -648,8 +662,6 @@ def shear_angle_calculator(
         clock_angle = np.arctan2(b_imf[1], b_imf[2]) * 180 / np.pi
 
         m_proton = 1.672e-27  # Mass of proton in SI unit
-
-        print(f"Hello, mass of proton={m_proton} kg and np_imf={np_imf} \n")
         rho = np_imf * m_proton * 1.15  # 1.15 instead of 1.0 to account for the alpha particles
 
         #  Solar wind ram pressure in nPa, including roughly 4% Helium++ contribution
@@ -785,15 +797,25 @@ def shear_angle_calculator(
         b_msz[j, k] = r[11]
 
     if (save_data):
-        # Check if the data folder exists, if not then create it.
-        if not os.path.exists("data_folder"):
-            os.makedirs("data_folder")
+        # Check if the directory exists, if not create it using Path
+        if not Path("data_folder").exists():
+            Path("data_folder").mkdir()
             if verbose:
                 print("Created data_folder folder")
+
         # Name of the file to save the data
-        print(type(time_observation))
         tobs = str(time_observation).replace(" ", "_")
         fn = f'data_folder/{data_file}_{model_type}_{dr}dr_{tobs}.hdf5'
+        if Path(fn).is_file():
+            print(f"File '{fn}' already exists.")
+            # Ask the user if they want to overwrite the file
+            overwrite = overwrite_stuff()
+            if overwrite == 'y':
+                fn = fn
+            else:
+                fn = f'data_folder/{data_file}_{model_type}_{dr}dr_{tobs}_{time.time():.0f}.hdf5'
+                print(f"Saving data to a modified file named: '{fn}'.\n If you want to overwrite the file, please change the 'overwrite' variable to 'y' in the code.")
+
         # Save shear data to an hdf5 file
         try:
             with hf.File(fn, 'w') as f:
@@ -816,11 +838,11 @@ def shear_angle_calculator(
                 f.create_dataset('b_msy', data=b_msy)
                 f.create_dataset('b_msz', data=b_msz)
                 f.close()
-            print(f"Data saved to {data_file}_{model_type}_{dr}dr_{tobs}.hdf5")
+            print(f"Data saved to file '{fn}'")
         except Exception as e:
             print(e)
             print(
-                f'Data not saved to file {fn}. Please make sure that file name is correctly assigned and that the directory exists and you have write permissions')
+                f"Data was NOT saved to file '{fn}'. Please make sure that file name is correctly assigned and that the directory exists and you have write permissions")
 
     if plot_figure:
         plot_shear(
@@ -833,12 +855,17 @@ def shear_angle_calculator(
             z_min=z_min,
             z_max=z_max,
             dr=dr, model_type=model_type,
+            clip_image=clip_image,
             figure_file=figure_file,
             figure_format=figure_format,
             dpi=300,
-            figure_size=(8,6),
+            figure_size=figure_size,
             data_file=data_file,
             save_figure=save_figure
         )
 
     return shear
+
+def overwrite_stuff():
+    overwrite = input("Do you want to overwrite it? (y/n) ==> ")
+    return overwrite

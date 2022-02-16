@@ -2,7 +2,7 @@
 name = "imf_shear"
 version = "0.1.0"
 description = ""
-authors = ["qudsiramiz <qudsiramiz@gmail.com>"]
+authors = ["Ramiz Qudsi <qudsiramiz@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = ">=3.8, <3.11"

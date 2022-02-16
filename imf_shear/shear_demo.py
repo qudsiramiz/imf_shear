@@ -6,7 +6,7 @@ inputs = {
     "b_imf" : None,
     "np_imf" : None,
     "v_imf" : None,
-    "min_max_val" : 15,
+    "min_max_val" : 20,
     "dmp" : None,
     "dr" : None,
     "model_type" : "t96",
@@ -17,7 +17,9 @@ inputs = {
     "save_data" : True,
     "data_file" : None,
     "plot_figure" : True,
+    "clip_image" : False,
     "save_figure" : True,
+    "figure_size" : (6,6),
     "figure_file" : "shear_angle_calculator",
     "figure_format" : "pdf",
     "verbose" : True
