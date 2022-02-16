@@ -337,12 +337,61 @@ def plot_shear(
     data_file=None,
     save_figure=True
     ):
+    """
+    Plot the shear field and save it to a file.
 
-    fig, axs = plt.subplots(1, 1, figsize=figure_size)
+    Parameters
+    ----------
+    shear : numpy.ndarray
+        The shear as computed from the model.
+    sw_params : dict
+        The dictionary of solar wind parameters.
+    time_observation : datetime.datetime
+        The time of the observation.
+    angle_units : str
+        The units of the angle.
+    y_min : float
+        The minimum value of the y axis.
+    y_max : float
+        The maximum value of the y axis.
+    z_min : float
+        The minimum value of the z axis.
+    z_max : float
+        The maximum value of the z axis.
+    model_type : str
+        The type of model.
+    dr : float
+        The step size of the grid. Default is none.
+    figure_file : str
+        The file name of the figure. Default is None.
+    figure_format : str
+        The format of the figure. Default is png.
+    dpi : int
+        The resolution of the figure. Default is 300.
+    figure_size : tuple
+        The size of the figure.
+    data_file : str
+        The file name of the data file.
+    save_figure : bool
+        Whether to save the figure. Default is True.
+    
+    Returns
+    -------
+    None
+
+    Raises
+    ------
+    ValueError
+        If the shear is not a numpy.ndarray.
+    """
+    if (shear is None):
+        raise ValueError("The shear is not defined. Shear must be a numpy.ndarray.")
 
     image_rotated = np.transpose(shear)
     # Smoothen the image
     image_smooth = sp.ndimage.filters.gaussian_filter(image_rotated, sigma=[5, 5], mode='nearest')
+
+    fig, axs = plt.subplots(1, 1, figsize=figure_size)
     im = axs.imshow(image_smooth, extent=[y_min, y_max, z_min, z_max], origin='lower',
                     cmap=plt.cm.viridis)
     divider = make_axes_locatable(axs)
@@ -482,6 +531,48 @@ def shear_angle_calculator(
     verbose : bool If set to True, then the code will print out the progress of the code at several
         points. Default is True. For this to work, you must have the following modules installed:
          - tabulate (https://pypi.org/project/tabulate/)
+
+    Returns
+    -------
+    shear_angle : float
+        Shear angle between the draped magnetosheath and the magnetospheric magnetic field.
+    
+    Raises
+    ------
+    ImportError
+        If the geopack module is not installed.
+    ImportError
+        If the pyspedas module is not installed.
+    ImportError
+        If the tabulate module is not installed.
+    ImportError
+        If the h5py module is not installed.
+    ImportError
+        If the pytplot module is not installed.
+
+    Examples
+    --------
+    >>> inputs = {
+    ...    "b_imf" : None,
+    ...    "np_imf" : None,
+    ...    "v_imf" : None,
+    ...    "min_max_val" : 15,
+    ...    "dmp" : None,
+    ...    "dr" : None,
+    ...    "model_type" : "t96",
+    ...    "angle_units" : "degrees",
+    ...    "use_real_data" : True,
+    ...    "time_observation" : '2020-10-01 14:03:06',
+    ...    "dt" : 5,
+    ...    "save_data" : True,
+    ...    "data_file" : None,
+    ...    "plot_figure" : True,
+    ...    "save_figure" : True,
+    ...    "figure_file" : "shear_angle_calculator",
+    ...    "figure_format" : "pdf",
+    ...    "verbose" : True
+    ...    }
+    >>> shear_angle = shear_angle_calculator(**inputs)
     """
     # Check if the required modules are installed
     try:
