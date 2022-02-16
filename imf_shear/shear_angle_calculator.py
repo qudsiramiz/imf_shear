@@ -95,9 +95,17 @@ def get_sw_params(
         The solar wind parameters.
     """
 
-    import pyspedas as spd
-    import pytplot as ptt
-    import geopack.geopack as gp
+    try:
+        import pyspedas as spd
+        import pytplot as ptt
+    except ImportError:
+        raise ImportError("pyspedas is not installed. Please install it using the command: pip install pyspedas")
+
+    try:
+        import geopack.geopack as gp
+    except ImportError:
+        raise ImportError("geopack is not installed. Please install it using the command: pip install geopack or directly from the source at GitHub (https://github.com/tsssss/geopack).")
+
     if trange is None:
         raise ValueError("trange must be specified as a list of start and end times in the format 'YYYY-MM-DD HH:MM:SS'.")
 
@@ -206,7 +214,12 @@ def model_run(*args):
     Returns the value of the magnetic field at a given point in the model grid using three different
     models
     """
-    import geopack.geopack as gp
+    # Check if the required modules are installed
+    try:
+        import geopack.geopack as gp
+    except ImportError:
+        raise ImportError("geopack is not installed. Please install it using the command: pip install geopack or directly from the source at GitHub (https://github.com/tsssss/geopack).")
+
 
     j = args[0][0]
     k = args[0][1]
@@ -536,7 +549,7 @@ def shear_angle_calculator(
     -------
     shear_angle : float
         Shear angle between the draped magnetosheath and the magnetospheric magnetic field.
-    
+
     Raises
     ------
     ImportError
@@ -579,13 +592,6 @@ def shear_angle_calculator(
         import geopack.geopack as gp
     except ImportError:
         raise ImportError("geopack is not installed. Please install it using the command: pip install geopack or directly from the source at GitHub (https://github.com/tsssss/geopack).")
-
-    if use_real_data:
-        try:
-            import pyspedas as spd
-            import pytplot as ptt
-        except ImportError:
-            raise ImportError("pyspedas is not installed. Please install it using the command: pip install pyspedas")
 
     if save_data:
         try:
