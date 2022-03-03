@@ -207,6 +207,38 @@ def model_run(*args):
     """
     Returns the value of the magnetic field at a given point in the model grid using three different
     models
+
+    Parameters
+    ----------
+    args : list
+        List of arguments which are used to run the model. They are:
+            args[0][0] : int
+                First index of the point in the model grid
+            args[0][1] : int
+                Second index of the point in the model grid
+            args[0][2] : float
+                Maximum value of x-coordinate of the point in the model grid. Minimum value is
+                negative of this value.
+            args[0][3] : float
+                Maximum value of y-coordinate of the point in the model grid. Minimum value is
+                negative of this value.
+            args[0][4] : float
+                Finess of the model grid (in terms of radius of the Earth).
+            args[0][5] : float
+                Thickness of the magnetosphere (in terms of radius of the Earth).
+            args[0][6] : float
+                the standoff distance at the subsolar point (Shu et al. 1998).
+            args[0][7] : float
+                Alpha paramter, level of tail flairing (Shu et al. 1998).
+            args[0][8] : float
+                Stand off position of the magnetopause (Shu et al. 1998).
+            args[0][9] : dict
+                Solar wind parameters. These are computed using a different function. See
+                "get_sw_params" for more details.
+            args[0][10] : str
+                Name of the model to be used. Options are: 't96', 't01'
+
+
     """
     # Check if the required modules are installed
     try:
