@@ -18,6 +18,7 @@ font = {'family': 'serif', 'weight': 'normal', 'size': 10}
 plt.rc('font', **font)
 plt.rc('text', usetex=True)
 
+
 def get_shear(b_vec_1, b_vec_2, angle_units="radians"):
     r"""
     Get the shear angle between two magnetic field lines.

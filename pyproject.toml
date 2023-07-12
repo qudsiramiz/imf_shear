@@ -16,6 +16,8 @@ numpy = "^1.22.2"
 DateTime = "^4.4"
 scipy = "^1.8.0"
 scikit-image = "^0.19.1"
+spacepy = "^0.4.1"
+ipython = "8.6.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

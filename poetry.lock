@@ -1,4 +1,12 @@
 [[package]]
+name = "appnope"
+version = "0.1.3"
+description = "Disable App Nap on macOS >= 10.9"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "astropy"
 version = "5.1"
 description = "Astronomy and astrophysics core library"
@@ -18,6 +26,20 @@ docs = ["sphinx (<4)", "sphinx-astropy (>=1.6)", "pytest (>=7.0)", "scipy (>=1.3
 recommended = ["scipy (>=1.3)", "matplotlib (>=3.1,!=3.4.0,!=3.5.2)"]
 test = ["pytest (>=7.0)", "pytest-doctestplus (>=0.12)", "pytest-astropy-header (>=0.2.1)", "pytest-astropy (>=0.10)", "pytest-xdist"]
 test_all = ["pytest (>=7.0)", "pytest-doctestplus (>=0.12)", "pytest-astropy-header (>=0.2.1)", "pytest-astropy (>=0.9)", "pytest-xdist", "objgraph", "ipython (>=4.2)", "coverage", "skyfield (>=1.20)", "sgp4 (>=2.3)"]
+
+[[package]]
+name = "asttokens"
+version = "2.1.0"
+description = "Annotate AST trees with source code positions"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+six = "*"
+
+[package.extras]
+test = ["astroid (<=2.5.3)", "pytest"]
 
 [[package]]
 name = "atomicwrites"
@@ -40,6 +62,25 @@ dev = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", 
 docs = ["furo", "sphinx", "zope.interface", "sphinx-notfound-page"]
 tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "cloudpickle"]
 tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "cloudpickle"]
+
+[[package]]
+name = "backcall"
+version = "0.2.0"
+description = "Specifications for callback functions passed in to an API"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "blosc2"
+version = "2.0.0"
+description = "Python wrapper for the C-Blosc2 library."
+category = "main"
+optional = false
+python-versions = ">=3.8, <4"
+
+[package.dependencies]
+msgpack = "*"
 
 [[package]]
 name = "bokeh"
@@ -124,7 +165,7 @@ unicode_backport = ["unicodedata2"]
 name = "colorama"
 version = "0.4.5"
 description = "Cross-platform colored terminal text."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
@@ -137,6 +178,14 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "cython"
+version = "0.29.36"
+description = "The Cython compiler for writing C extensions for the Python language."
+category = "main"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
 name = "datetime"
 version = "4.5"
 description = "This package provides a DateTime data type, as known from Zope. Unless you need to communicate with Zope APIs, you're probably better off using Python's built-in datetime module."
@@ -147,6 +196,25 @@ python-versions = "*"
 [package.dependencies]
 pytz = "*"
 "zope.interface" = "*"
+
+[[package]]
+name = "decorator"
+version = "5.1.1"
+description = "Decorators for Humans"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[[package]]
+name = "executing"
+version = "1.2.0"
+description = "Get the currently executing AST node of a frame, and other information"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+tests = ["asttokens", "pytest", "littleutils", "rich"]
 
 [[package]]
 name = "fonttools"
@@ -172,11 +240,15 @@ woff = ["zopfli (>=0.1.4)", "brotlicffi (>=0.8.0)", "brotli (>=1.0.1)"]
 
 [[package]]
 name = "geopack"
-version = "1.0.9"
+version = "1.0.10"
 description = "Python version of geopack and Tsyganenko models, compatible with geopack05 and geopack08"
 category = "main"
 optional = false
 python-versions = "*"
+
+[package.dependencies]
+numpy = "*"
+scipy = "*"
 
 [[package]]
 name = "h5py"
@@ -242,6 +314,41 @@ test = ["invoke", "pytest", "pytest-cov", "fsspec"]
 tifffile = ["tifffile"]
 
 [[package]]
+name = "ipython"
+version = "8.6.0"
+description = "IPython: Productive Interactive Computing"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+appnope = {version = "*", markers = "sys_platform == \"darwin\""}
+backcall = "*"
+colorama = {version = "*", markers = "sys_platform == \"win32\""}
+decorator = "*"
+jedi = ">=0.16"
+matplotlib-inline = "*"
+pexpect = {version = ">4.3", markers = "sys_platform != \"win32\""}
+pickleshare = "*"
+prompt-toolkit = ">3.0.1,<3.1.0"
+pygments = ">=2.4.0"
+stack-data = "*"
+traitlets = ">=5"
+
+[package.extras]
+all = ["black", "ipykernel", "setuptools (>=18.5)", "sphinx (>=1.3)", "sphinx-rtd-theme", "docrepr", "matplotlib", "stack-data", "pytest (<7)", "typing-extensions", "pytest (<7.1)", "pytest-asyncio", "testpath", "nbconvert", "nbformat", "ipywidgets", "notebook", "ipyparallel", "qtconsole", "curio", "matplotlib (!=3.2.0)", "numpy (>=1.20)", "pandas", "trio"]
+black = ["black"]
+doc = ["ipykernel", "setuptools (>=18.5)", "sphinx (>=1.3)", "sphinx-rtd-theme", "docrepr", "matplotlib", "stack-data", "pytest (<7)", "typing-extensions", "pytest (<7.1)", "pytest-asyncio", "testpath"]
+kernel = ["ipykernel"]
+nbconvert = ["nbconvert"]
+nbformat = ["nbformat"]
+notebook = ["ipywidgets", "notebook"]
+parallel = ["ipyparallel"]
+qtconsole = ["qtconsole"]
+test = ["pytest (<7.1)", "pytest-asyncio", "testpath"]
+test_extra = ["pytest (<7.1)", "pytest-asyncio", "testpath", "curio", "matplotlib (!=3.2.0)", "nbformat", "numpy (>=1.20)", "pandas", "trio"]
+
+[[package]]
 name = "isodate"
 version = "0.6.1"
 description = "An ISO 8601 date/time/duration parser and formatter"
@@ -251,6 +358,21 @@ python-versions = "*"
 
 [package.dependencies]
 six = "*"
+
+[[package]]
+name = "jedi"
+version = "0.18.1"
+description = "An autocompletion tool for Python that can be used for text editors."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+parso = ">=0.8.0,<0.9.0"
+
+[package.extras]
+qa = ["flake8 (==3.8.3)", "mypy (==0.782)"]
+testing = ["Django (<3.1)", "colorama", "docopt", "pytest (<7.0.0)"]
 
 [[package]]
 name = "jinja2"
@@ -310,6 +432,17 @@ python-dateutil = ">=2.7"
 setuptools_scm = ">=4"
 
 [[package]]
+name = "matplotlib-inline"
+version = "0.1.6"
+description = "Inline Matplotlib backend for Jupyter"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+traitlets = "*"
+
+[[package]]
 name = "more-itertools"
 version = "8.13.0"
 description = "More routines for operating on iterables, beyond itertools"
@@ -318,16 +451,25 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
-name = "netcdf4"
-version = "1.6.0"
-description = "Provides an object-oriented python interface to the netCDF version 4 library."
+name = "msgpack"
+version = "1.0.5"
+description = "MessagePack serializer"
 category = "main"
 optional = false
 python-versions = "*"
 
+[[package]]
+name = "netcdf4"
+version = "1.6.4"
+description = "Provides an object-oriented python interface to the netCDF version 4 library"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
 [package.dependencies]
+certifi = "*"
 cftime = "*"
-numpy = ">=1.9"
+numpy = "*"
 
 [[package]]
 name = "networkx"
@@ -343,6 +485,17 @@ developer = ["pre-commit (>=2.19)", "mypy (>=0.960)"]
 doc = ["sphinx (>=5)", "pydata-sphinx-theme (>=0.9)", "sphinx-gallery (>=0.10)", "numpydoc (>=1.4)", "pillow (>=9.1)", "nb2plots (>=0.6)", "texext (>=0.6.6)"]
 extra = ["lxml (>=4.6)", "pygraphviz (>=1.9)", "pydot (>=1.4.2)", "sympy (>=1.10)"]
 test = ["pytest (>=7.1)", "pytest-cov (>=3.0)", "codecov (>=2.1)"]
+
+[[package]]
+name = "numexpr"
+version = "2.8.4"
+description = "Fast numerical expression evaluator for NumPy"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+numpy = ">=1.13.3"
 
 [[package]]
 name = "numpy"
@@ -385,6 +538,37 @@ pytz = ">=2020.1"
 test = ["hypothesis (>=5.5.3)", "pytest (>=6.0)", "pytest-xdist (>=1.31)"]
 
 [[package]]
+name = "parso"
+version = "0.8.3"
+description = "A Python Parser"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+qa = ["flake8 (==3.8.3)", "mypy (==0.782)"]
+testing = ["docopt", "pytest (<6.0.0)"]
+
+[[package]]
+name = "pexpect"
+version = "4.8.0"
+description = "Pexpect allows easy control of interactive console applications."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+ptyprocess = ">=0.5"
+
+[[package]]
+name = "pickleshare"
+version = "0.7.5"
+description = "Tiny 'shelve'-like database with concurrency support"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "pillow"
 version = "9.2.0"
 description = "Python Imaging Library (Fork)"
@@ -408,12 +592,50 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 dev = ["pre-commit", "tox"]
 
 [[package]]
+name = "prompt-toolkit"
+version = "3.0.32"
+description = "Library for building powerful interactive command lines in Python"
+category = "main"
+optional = false
+python-versions = ">=3.6.2"
+
+[package.dependencies]
+wcwidth = "*"
+
+[[package]]
+name = "ptyprocess"
+version = "0.7.0"
+description = "Run a subprocess in a pseudo terminal"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "pure-eval"
+version = "0.2.2"
+description = "Safely evaluate AST nodes without side effects"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+tests = ["pytest"]
+
+[[package]]
 name = "py"
 version = "1.11.0"
 description = "library with cross-python path, ini-parsing, io, code, log facilities"
 category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "py-cpuinfo"
+version = "9.0.0"
+description = "Get CPU info with pure Python"
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "pyerfa"
@@ -429,6 +651,17 @@ numpy = ">=1.17"
 [package.extras]
 docs = ["sphinx-astropy (>=1.3)"]
 test = ["pytest", "pytest-doctestplus (>=0.7)"]
+
+[[package]]
+name = "pygments"
+version = "2.13.0"
+description = "Pygments is a syntax highlighting package written in Python."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+plugins = ["importlib-metadata"]
 
 [[package]]
 name = "pyparsing"
@@ -503,8 +736,8 @@ python-versions = "*"
 
 [[package]]
 name = "pyspedas"
-version = "1.3.18"
-description = "Python Space Physics Environment Data Analysis Software (SPEDAS)"
+version = "1.4.40"
+description = "Python Space Physics Environment Data Analysis Software (pySPEDAS)"
 category = "main"
 optional = false
 python-versions = ">=3.7"
@@ -512,14 +745,15 @@ python-versions = ">=3.7"
 [package.dependencies]
 astropy = "*"
 cdasws = ">=1.7.24"
-cdflib = ">=0.4.3"
-geopack = ">=1.0.9"
+cdflib = "<1.0.0"
+geopack = ">=1.0.10"
 hapiclient = ">=0.2.2"
-netCDF4 = "*"
+netCDF4 = ">=1.6.2"
 numpy = ">=1.19.5"
-pytplot-mpl-temp = ">=2.0.8"
+pytplot-mpl-temp = ">=2.1.37"
 pywavelets = "*"
 requests = "*"
+viresclient = "*"
 
 [[package]]
 name = "pytest"
@@ -579,7 +813,7 @@ tests = ["pytest", "pytest-cov", "coveralls", "flake8", "mypy", "astropy"]
 
 [[package]]
 name = "pytplot-mpl-temp"
-version = "2.0.10"
+version = "2.1.42"
 description = "A python version of IDL tplot libraries"
 category = "main"
 optional = false
@@ -587,11 +821,12 @@ python-versions = ">=3.6"
 
 [package.dependencies]
 astropy = "*"
-bokeh = ">=1.1"
-cdflib = "*"
+bokeh = ">=1.1,<3.0"
+cdflib = "<1.0.0"
 matplotlib = ">=3.4"
 numpy = ">=1.19.5"
 pandas = "*"
+python-dateutil = "*"
 scipy = "*"
 xarray = "*"
 
@@ -704,6 +939,56 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
+name = "spacepy"
+version = "0.4.1"
+description = "SpacePy: Tools for Space Science Applications"
+category = "main"
+optional = false
+python-versions = ">=3.1"
+
+[package.dependencies]
+h5py = ">=2.6"
+matplotlib = ">=1.5"
+numpy = ">=1.10,<1.15.0 || >1.15.0"
+python-dateutil = ">=1.4"
+scipy = ">=0.11"
+
+[[package]]
+name = "stack-data"
+version = "0.6.0"
+description = "Extract data from python stack frames and tracebacks for informative displays"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+asttokens = ">=2.1.0"
+executing = ">=1.2.0"
+pure-eval = "*"
+
+[package.extras]
+tests = ["pytest", "typeguard", "pygments", "littleutils", "cython"]
+
+[[package]]
+name = "tables"
+version = "3.8.0"
+description = "Hierarchical datasets for Python"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+blosc2 = ">=2.0.0,<2.1.0"
+cython = ">=0.29.21"
+numexpr = ">=2.6.2"
+numpy = ">=1.19.0"
+packaging = "*"
+py-cpuinfo = "*"
+
+[package.extras]
+doc = ["sphinx (>=1.1)", "sphinx-rtd-theme", "numpydoc", "ipython"]
+
+[[package]]
 name = "tabulate"
 version = "0.8.10"
 description = "Pretty-print tabular data"
@@ -745,6 +1030,35 @@ optional = false
 python-versions = ">= 3.7"
 
 [[package]]
+name = "tqdm"
+version = "4.65.0"
+description = "Fast, Extensible Progress Meter"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+
+[package.extras]
+dev = ["py-make (>=0.1.0)", "twine", "wheel"]
+notebook = ["ipywidgets (>=6)"]
+slack = ["slack-sdk"]
+telegram = ["requests"]
+
+[[package]]
+name = "traitlets"
+version = "5.5.0"
+description = ""
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+docs = ["myst-parser", "pydata-sphinx-theme", "sphinx"]
+test = ["pre-commit", "pytest"]
+
+[[package]]
 name = "typing-extensions"
 version = "4.3.0"
 description = "Backported and Experimental Type Hints for Python 3.7+"
@@ -766,10 +1080,33 @@ secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "cer
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
+name = "viresclient"
+version = "0.11.1"
+description = "A Python client for interacting with a VirES server"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+cdflib = ">=0.3.9"
+Jinja2 = ">=2.10"
+netCDF4 = ">=1.5.3"
+pandas = ">=0.18"
+requests = ">=2.0.0"
+tables = ">=3.4.4"
+tqdm = ">=4.23.0"
+xarray = ">=0.11.0"
+
+[package.extras]
+dev = ["pytest (>=6)", "nox (>=2022)"]
+docs = ["Sphinx (==4.5.0)", "sphinx-book-theme (==0.3.3)", "sphinx_copybutton (==0.5.0)", "sphinx-tabs (==3.4.0)"]
+test = ["pytest (>=6)"]
+
+[[package]]
 name = "wcwidth"
 version = "0.2.5"
 description = "Measures the displayed width of unicode strings in a terminal"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -810,9 +1147,10 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8, <3.11"
-content-hash = "25134934ddd875aab7a414f41a492484cd51ed1b373943ca8d752ff07cf889cd"
+content-hash = "04d4b6c6d9151a550ca259e78ce1f5e0755bc4da376c5b669c384b69493799e4"
 
 [metadata.files]
+appnope = []
 astropy = [
     {file = "astropy-5.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:5d0e5f8ff0ae1317a095ac48a38e3708de470534f2930c4833d166ef3c44d99d"},
     {file = "astropy-5.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:25b8b512901dd1a443341e8941cab882d7275d42ed7aa2f3908adb3158d5c377"},
@@ -833,11 +1171,14 @@ astropy = [
     {file = "astropy-5.1-cp39-cp39-win_amd64.whl", hash = "sha256:f54d3537e987c33244435fb155f9087e130abae4126d06b003171c15dbff6ed6"},
     {file = "astropy-5.1.tar.gz", hash = "sha256:1db1b2c7eddfc773ca66fa33bd07b25d5b9c3b5eee2b934e0ca277fa5b1b7b7e"},
 ]
+asttokens = []
 atomicwrites = []
 attrs = [
     {file = "attrs-21.4.0-py2.py3-none-any.whl", hash = "sha256:2d27e3784d7a565d36ab851fe94887c5eccd6a463168875832a1be79c82828b4"},
     {file = "attrs-21.4.0.tar.gz", hash = "sha256:626ba8234211db98e869df76230a137c4c40a12d72445c45d5f5b716f076e2fd"},
 ]
+backcall = []
+blosc2 = []
 bokeh = [
     {file = "bokeh-2.4.3-py3-none-any.whl", hash = "sha256:104d2f0a4ca7774ee4b11e545aa34ff76bf3e2ad6de0d33944361981b65da420"},
     {file = "bokeh-2.4.3.tar.gz", hash = "sha256:ef33801161af379665ab7a34684f2209861e3aefd5c803a21fbbb99d94874b03"},
@@ -854,12 +1195,12 @@ cycler = [
     {file = "cycler-0.11.0-py3-none-any.whl", hash = "sha256:3a27e95f763a428a739d2add979fa7494c912a32c17c4c38c4d5f082cad165a3"},
     {file = "cycler-0.11.0.tar.gz", hash = "sha256:9c87405839a19696e837b3b818fed3f5f69f16f1eec1a1ad77e043dcea9c772f"},
 ]
+cython = []
 datetime = []
+decorator = []
+executing = []
 fonttools = []
-geopack = [
-    {file = "geopack-1.0.9-py3-none-any.whl", hash = "sha256:2cfbfc14d6bffa2a038efce697c50c9d9db2e9e0ee960298f5b744a4ec385c05"},
-    {file = "geopack-1.0.9.tar.gz", hash = "sha256:dbcc15dc875be0fffad43efaa0a66d370368db8b4b5d90cfbcc783461fd3336d"},
-]
+geopack = []
 h5py = []
 hapiclient = [
     {file = "hapiclient-0.2.4.tar.gz", hash = "sha256:e74a96206f0ea5536ac65ea982c5539adcb9cef41177b04ab3373992a9fac089"},
@@ -869,10 +1210,12 @@ idna = [
     {file = "idna-3.3.tar.gz", hash = "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"},
 ]
 imageio = []
+ipython = []
 isodate = [
     {file = "isodate-0.6.1-py2.py3-none-any.whl", hash = "sha256:0751eece944162659049d35f4f549ed815792b38793f07cf73381c1c87cbed96"},
     {file = "isodate-0.6.1.tar.gz", hash = "sha256:48c5881de7e8b0a0d648cb024c8062dc84e7b840ed81e864c7614fd3c127bde9"},
 ]
+jedi = []
 jinja2 = [
     {file = "Jinja2-3.1.2-py3-none-any.whl", hash = "sha256:6088930bfe239f0e6710546ab9c19c9ef35e29792895fed6e6e31a023a182a61"},
     {file = "Jinja2-3.1.2.tar.gz", hash = "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"},
@@ -961,24 +1304,34 @@ matplotlib = [
     {file = "matplotlib-3.5.2-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:24173c23d1bcbaed5bf47b8785d27933a1ac26a5d772200a0f3e0e38f471b001"},
     {file = "matplotlib-3.5.2.tar.gz", hash = "sha256:48cf850ce14fa18067f2d9e0d646763681948487a8080ec0af2686468b4607a2"},
 ]
+matplotlib-inline = []
 more-itertools = []
+msgpack = []
 netcdf4 = []
 networkx = []
+numexpr = []
 numpy = []
 packaging = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
     {file = "packaging-21.3.tar.gz", hash = "sha256:dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb"},
 ]
 pandas = []
+parso = []
+pexpect = []
+pickleshare = []
 pillow = []
 pluggy = [
     {file = "pluggy-0.13.1-py2.py3-none-any.whl", hash = "sha256:966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"},
     {file = "pluggy-0.13.1.tar.gz", hash = "sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0"},
 ]
+prompt-toolkit = []
+ptyprocess = []
+pure-eval = []
 py = [
     {file = "py-1.11.0-py2.py3-none-any.whl", hash = "sha256:607c53218732647dff4acdfcd50cb62615cedf612e72d1724fb1a0cc6405b378"},
     {file = "py-1.11.0.tar.gz", hash = "sha256:51c75c4126074b472f746a24399ad32f6053d1b34b68d2fa41e558e6f4a98719"},
 ]
+py-cpuinfo = []
 pyerfa = [
     {file = "pyerfa-2.0.0.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:278832de7803f2fb0ef4b14263200f98dfdb3eaa78dc63835d93796fd8fc42c6"},
     {file = "pyerfa-2.0.0.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:629248cebc8626a52e80f69d4e2f30cc6e751f57803f5ba7ec99edd09785d181"},
@@ -1010,6 +1363,7 @@ pyerfa = [
     {file = "pyerfa-2.0.0.1-cp39-cp39-win_amd64.whl", hash = "sha256:63a83c35cea8c5d50d53c18089f1e625c0ffc59a7a5b8d44e0f1b3ec5288f183"},
     {file = "pyerfa-2.0.0.1.tar.gz", hash = "sha256:2fd4637ffe2c1e6ede7482c13f583ba7c73119d78bef90175448ce506a0ede30"},
 ]
+pygments = []
 pyparsing = [
     {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
     {file = "pyparsing-3.0.9.tar.gz", hash = "sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"},
@@ -1149,6 +1503,9 @@ six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
+spacepy = []
+stack-data = []
+tables = []
 tabulate = []
 tifffile = []
 tomli = [
@@ -1156,8 +1513,11 @@ tomli = [
     {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
 ]
 tornado = []
+tqdm = []
+traitlets = []
 typing-extensions = []
 urllib3 = []
+viresclient = []
 wcwidth = [
     {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},
     {file = "wcwidth-0.2.5.tar.gz", hash = "sha256:c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"},
